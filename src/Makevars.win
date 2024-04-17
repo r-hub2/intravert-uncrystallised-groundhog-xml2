@@ -1,0 +1,18 @@
+VERSION=2.10.3
+RWINLIB=../windows/libxml2-$(VERSION)
+PKG_CPPFLAGS=-I../inst/include -I$(RWINLIB)/include/libxml2 \
+	-DLIBXML_STATIC
+
+PKG_LIBS = -L$(RWINLIB)/lib${subst gcc,,$(COMPILED_BY)}$(R_ARCH) \
+	-L$(RWINLIB)/lib$(R_ARCH)\
+	-lxml2 -llzma -liconv -lz -lws2_32
+
+all: clean winlibs
+
+clean:
+	rm -f $(OBJECTS) $(SHLIB)
+
+winlibs:
+	"${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" "../tools/winlibs.R" $(VERSION)
+
+.PHONY: all winlibs clean
